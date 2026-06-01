@@ -1,0 +1,52 @@
+---
+// Static SVG bar chart — no JS needed
+const data = [
+  { country: "USA", value: 916 },
+  { country: "China", value: 296 },
+  { country: "Russia", value: 109 },
+  { country: "India", value: 83 },
+  { country: "Saudi Arabia", value: 75 },
+  { country: "UK", value: 74 },
+  { country: "Germany", value: 66 },
+  { country: "France", value: 61 },
+];
+
+const margin = { top: 24, right: 20, bottom: 56, left: 60 };
+const svgW = 620;
+const svgH = 340;
+const width = svgW - margin.left - margin.right;
+const height = svgH - margin.top - margin.bottom;
+const maxVal = Math.max(...data.map(d => d.value));
+const barWidth = width / data.length;
+const barPad = 8;
+---
+
+<svg width={svgW} height={svgH} style="display:block; max-width:100%; font-family:inherit;">
+  <g transform={`translate(${margin.left},${margin.top})`}>
+    {data.map((d, i) => {
+      const barH = (d.value / maxVal) * height;
+      const x = i * barWidth + barPad / 2;
+      const y = height - barH;
+      return (
+        <>
+          <rect x={x} y={y} width={barWidth - barPad} height={barH} fill="#4f7cac" rx="3" />
+          <text x={x + (barWidth - barPad) / 2} y={y - 5} text-anchor="middle" font-size="11" fill="#333">
+            ${d.value}B
+          </text>
+          <text x={x + (barWidth - barPad) / 2} y={height + 18} text-anchor="middle" font-size="11" fill="#555">
+            {d.country}
+          </text>
+        </>
+      );
+    })}
+    <!-- Y-axis label -->
+    <text
+      transform={`translate(-45,${height / 2}) rotate(-90)`}
+      text-anchor="middle"
+      font-size="12"
+      fill="#666"
+    >
+      Spending (USD Billions)
+    </text>
+  </g>
+</svg>
